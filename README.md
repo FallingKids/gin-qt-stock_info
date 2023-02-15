@@ -1,0 +1,1 @@
+# gin-qt-stock_info
