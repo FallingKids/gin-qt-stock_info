@@ -1,1 +1,1 @@
-# gin-qt-stock_info
+# gin-qt-business
