@@ -5,8 +5,8 @@ import (
 	"github.com/gin-qt-business/app/base"
 )
 
-type News struct{}
+type NewsController struct{}
 
-func (n *News) GetList(ctx *gin.Context) *base.Response {
+func (n *NewsController) GetList(ctx *gin.Context) *base.Response {
 	return nil
 }

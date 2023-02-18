@@ -19,5 +19,5 @@ func main() {
 
 	router.Router(r)
 
-	_ = r.Run()
+	_ = r.Run(":3000")
 }

@@ -6,31 +6,53 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-qt-business/app/base"
+	"github.com/gin-qt-business/app/constant"
 	"github.com/gin-qt-business/app/logic"
 	"github.com/gin-qt-business/app/type/data"
+	"github.com/gin-qt-business/app/utils"
 )
 
-type User struct{}
+type UserController struct{}
 
-func (u *User) LoginByPassword(ctx *gin.Context) *base.Response {
-	return base.NewResponseSuccess(1)
-}
-
-func (u *User) Register(ctx *gin.Context) *base.Response {
+func (u *UserController) LoginByPassword(ctx *gin.Context) *base.Response {
 	body, err := ioutil.ReadAll(ctx.Request.Body)
 	if err != nil {
-		return base.NewResponseError(err)
+		return base.NewResponseError(constant.READALL_ERROR)
+	}
+
+	var input data.LoginByPasswordReq
+	if err = json.Unmarshal(body, &input); err != nil {
+		return base.NewResponseError(constant.JSON_UNMARSHAL_ERROR)
+	}
+
+	logicUser := logic.UserService{}
+	res, err := logicUser.LoginByPassword(input)
+	if err != nil {
+		return base.NewResponseError(constant.Message(err.Error()))
+	}
+
+	return base.NewResponseSuccess(res)
+}
+
+func (u *UserController) Register(ctx *gin.Context) *base.Response {
+	body, err := ioutil.ReadAll(ctx.Request.Body)
+	if err != nil {
+		return base.NewResponseError(constant.READALL_ERROR)
 	}
 
 	var input data.RegisterReq
 	if err = json.Unmarshal(body, &input); err != nil {
-		return base.NewResponseError(err)
+		return base.NewResponseError(constant.JSON_UNMARSHAL_ERROR)
 	}
 
-	logicUser := logic.User{}
+	if !utils.CheckMobile(input.Phone) {
+		return base.NewResponseError(constant.PARAMS_VALIDATE_ERROR)
+	}
+
+	logicUser := logic.UserService{}
 	res, err := logicUser.Register(input)
 	if err != nil {
-		return base.NewResponseError(err)
+		return base.NewResponseError(constant.Message(err.Error()))
 	}
 
 	return base.NewResponseSuccess(res)

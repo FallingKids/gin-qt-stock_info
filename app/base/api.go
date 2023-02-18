@@ -14,18 +14,18 @@ const (
 )
 
 type Response struct {
-	Code      int         `json:"code"`      // 1：成功 | 0：失败
-	Message   string      `json:"message"`   // 成功：success | 失败：报错信息
-	Timestamp int         `json:"timestamp"` // 当前时间
-	Data      interface{} `json:"data"`      // 返回参数内容主体
+	Code      int         `json:"code"`           // 1：成功 | 0：失败
+	Message   string      `json:"message"`        // 成功：success | 失败：报错信息
+	Timestamp int         `json:"timestamp"`      // 当前时间
+	Data      interface{} `json:"data,omitempty"` // 返回参数内容主体
 }
 
 func NewResponseSuccess(data interface{}) *Response {
-	return newResponse(SUCCESS_CODE, messageEnum.SUCCESS_MESSAGE, data)
+	return newResponse(SUCCESS_CODE, string(messageEnum.SUCCESS_MESSAGE), data)
 }
 
-func NewResponseError(err error) *Response {
-	return newResponse(FAIL_CODE, err.Error(), nil)
+func NewResponseError(message messageEnum.Message) *Response {
+	return newResponse(FAIL_CODE, string(message), nil)
 }
 
 func newResponse(code int, message string, data interface{}) *Response {

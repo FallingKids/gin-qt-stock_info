@@ -14,22 +14,26 @@ func Router(r *gin.Engine) {
 	newsGroup := group.Group("/news_info")   // 资讯新闻模块
 	userGroup := group.Group("/user")        // 用户模块
 
-	stock := controller.Stock{}
-	news := controller.News{}
-	user := controller.User{}
+	stockController := controller.StockController{}
+	newsController := controller.NewsController{}
+	userController := controller.UserController{}
 
 	// 全局加载日志中间件
 	group.Use(middleware.RecordPostLog())
 
+	userGroup.POST("/register", func(ctx *gin.Context) {
+		ctx.JSON(200, userController.Register(ctx))
+	})
+
 	userGroup.POST("/loginByPassword", func(ctx *gin.Context) {
-		ctx.JSON(200, user.LoginByPassword(ctx))
+		ctx.JSON(200, userController.LoginByPassword(ctx))
 	})
 
 	stockGroup.POST("/getStockList", func(ctx *gin.Context) {
-		ctx.JSON(200, stock.GetList(ctx))
+		ctx.JSON(200, stockController.GetList(ctx))
 	})
 
 	newsGroup.POST("/getNewsList", func(ctx *gin.Context) {
-		ctx.JSON(200, news.GetList(ctx))
+		ctx.JSON(200, newsController.GetList(ctx))
 	})
 }

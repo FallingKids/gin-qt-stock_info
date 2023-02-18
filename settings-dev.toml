@@ -10,3 +10,9 @@ dbName = "qt-business"
 
 [log]
 path = "~/logs"
+
+[app]
+port = 3000
+
+aes_key = "jufeng6668987364"
+aes_iv = "jufeng1234567890"
