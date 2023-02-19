@@ -1,6 +1,8 @@
 package router
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/gin-qt-business/app/controller"
 	"github.com/gin-qt-business/app/middleware"
@@ -22,18 +24,21 @@ func Router(r *gin.Engine) {
 	group.Use(middleware.RecordPostLog())
 
 	userGroup.POST("/register", func(ctx *gin.Context) {
-		ctx.JSON(200, userController.Register(ctx))
+		ctx.JSON(http.StatusOK, userController.Register(ctx))
 	})
 
 	userGroup.POST("/loginByPassword", func(ctx *gin.Context) {
-		ctx.JSON(200, userController.LoginByPassword(ctx))
+		ctx.JSON(http.StatusOK, userController.LoginByPassword(ctx))
 	})
 
+	// 校验登录信息
+	group.Use(middleware.AccessCheck())
+
 	stockGroup.POST("/getStockList", func(ctx *gin.Context) {
-		ctx.JSON(200, stockController.GetList(ctx))
+		ctx.JSON(http.StatusOK, stockController.GetList(ctx))
 	})
 
 	newsGroup.POST("/getNewsList", func(ctx *gin.Context) {
-		ctx.JSON(200, newsController.GetList(ctx))
+		ctx.JSON(http.StatusOK, newsController.GetList(ctx))
 	})
 }

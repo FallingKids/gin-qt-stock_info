@@ -6,9 +6,9 @@ import (
 	"github.com/gin-qt-business/app/config"
 )
 
-const TABLE_NAME = "Users"
+const TABLE_NAME = "users"
 
-type UserDao struct {
+type User struct {
 	ID        uint `gorm:"primary_key"`
 	Uid       string
 	Username  string
@@ -19,7 +19,7 @@ type UserDao struct {
 	DeletedAt uint
 }
 
-func (user *UserDao) AddUser() error {
+func (user *User) AddUser() error {
 	err := config.DB.Table(TABLE_NAME).Create(&user).Error
 	if err != nil {
 		return err
@@ -27,10 +27,19 @@ func (user *UserDao) AddUser() error {
 	return nil
 }
 
-func (user *UserDao) GetUser() error {
+func (user *User) GetUser() error {
 	err := config.DB.Table(TABLE_NAME).Take(&user).Error
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+func (user *User) CountUser() (uint, error) {
+	var count uint
+	err := config.DB.Table(TABLE_NAME).Where(user).Count(&count).Error
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
 }

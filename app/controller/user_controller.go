@@ -25,8 +25,11 @@ func (u *UserController) LoginByPassword(ctx *gin.Context) *base.Response {
 		return base.NewResponseError(constant.JSON_UNMARSHAL_ERROR)
 	}
 
-	logicUser := logic.UserService{}
-	res, err := logicUser.LoginByPassword(input)
+	logicUser := logic.UserLogic{
+		LoginByPasswordParam: input,
+		Ctx:                  ctx,
+	}
+	res, err := logicUser.LoginByPassword()
 	if err != nil {
 		return base.NewResponseError(constant.Message(err.Error()))
 	}
@@ -49,8 +52,11 @@ func (u *UserController) Register(ctx *gin.Context) *base.Response {
 		return base.NewResponseError(constant.PARAMS_VALIDATE_ERROR)
 	}
 
-	logicUser := logic.UserService{}
-	res, err := logicUser.Register(input)
+	logicUser := logic.UserLogic{
+		RegisterReqParams: input,
+		Ctx:               ctx,
+	}
+	res, err := logicUser.Register()
 	if err != nil {
 		return base.NewResponseError(constant.Message(err.Error()))
 	}

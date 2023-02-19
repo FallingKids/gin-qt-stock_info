@@ -7,11 +7,19 @@ import (
 	"github.com/dgrijalva/jwt-go"
 )
 
+type JWT struct {
+	Username string
+	Password string
+	Exp      int64
+	Token    string
+}
+
 // CreateToken creates a new JWT token
-func CreateToken(username string) (string, error) {
+func (j *JWT) CreateToken() (string, error) {
 	claims := jwt.MapClaims{}
 	claims["authorized"] = true
-	claims["user"] = username
+	claims["user"] = j.Username
+	claims["password"] = j.Password
 	claims["exp"] = time.Now().Add(time.Hour * 24).Unix() // Token expires after 24 hours
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -19,8 +27,8 @@ func CreateToken(username string) (string, error) {
 }
 
 // ValidateToken checks if the token is valid
-func ValidateToken(tokenString string) (bool, error) {
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+func (j *JWT) ValidateToken() (bool, error) {
+	token, err := jwt.Parse(j.Token, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}

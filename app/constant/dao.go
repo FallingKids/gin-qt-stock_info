@@ -1,8 +1,8 @@
 package constant
 
-type deleted int
+type deleted uint
 
 const (
-	IS deleted = iota
-	NOT
+	IS_NOT_DELETED deleted = iota
+	IS_DELETED
 )
